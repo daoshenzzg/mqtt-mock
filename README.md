@@ -10,7 +10,7 @@ cd ../mqtt-mock/src/com.mgtv.mqtt; go build mqtt-mock.go
 ```
 # 使用说明
 ```$xslt
-Usage: ./mqtt-mock [-broker <broker>] [-number <the mock client number, default 20>] [-topic <topic>] [-username <username>] [-password <password>] [-cleanSession <cleanSession default true>] [-qos <qos, default 0>] [-autoReconnect <autoReconnect, default false>]
+Usage: ./mqtt-mock [-broker <broker>] [-c <client number, default 20>] [-n <message number, default 100>] [-topic <topic>] [-username <username>] [-password <password>] [-qos <qos, default 0>] [-size <message size, default 1024>]
   -action string
     	Publish or Subscribe or Subscribe(with publishing) (required) (default "pub or sub")
   -broker string
