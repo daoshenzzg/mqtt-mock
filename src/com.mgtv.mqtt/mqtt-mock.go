@@ -29,7 +29,7 @@ type ExecOptions struct {
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [-broker <broker>] [-c <client number, default 20>] [-n <message number, default 100>] [-topic <topic>] [-username <username>] [-password <password>] [-cleanSession <cleanSession default true>] [-qos <qos, default 0>] [-size <message size, default 1024>]\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s [-broker <broker>] [-c <client number, default 20>] [-n <message number, default 100>] [-topic <topic>] [-username <username>] [-password <password>] [-qos <qos, default 0>] [-size <message size, default 1024>]\n", os.Args[0])
 		flag.PrintDefaults()
 	}
 
