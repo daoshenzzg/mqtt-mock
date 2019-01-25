@@ -1,5 +1,5 @@
 # MQTT-Mock: MQTT Benchmark Tool
-这是一个使用[golang](https://golang.org)实现的mqtt客户端压测工具. 目前可支持Publish和Subscribe的qos为0的压测方式。
+这是一个使用[golang](https://golang.org)实现的mqtt客户端压测工具. 目前可支持Publish和Subscribe的压测方式。
 
 # 开始准备
 Use go get and go build
