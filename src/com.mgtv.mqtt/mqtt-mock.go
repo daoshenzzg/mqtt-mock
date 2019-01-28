@@ -29,13 +29,13 @@ type ExecOptions struct {
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [-broker <broker>] [-c <client number, default 20>] [-n <message number, default 100>] [-topic <topic>] [-username <username>] [-password <password>] [-qos <qos, default 0>] [-size <message size, default 1024>]\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s [-broker <broker>] [-action <action>] [-topic <topic>] [-c <client number, default 20>] [-n <message number, default 100>] [-size <message size, default 1024>] [-username <username>] [-password <password>] [-qos <qos, default 0>] [-debug <debug, default false>]\n", os.Args[0])
 		flag.PrintDefaults()
 	}
 
 	broker := flag.String("broker", "", "URI(tcp://{ip}:{port}) of MQTT broker (required)")
 	action := flag.String("action", "pub or sub", "Publish or Subscribe or Subscribe(with publishing) (required)")
-	topic := flag.String("topic", "mqtt-bench/benchmark/", "Base topic")
+	topic := flag.String("topic", "mqtt-mock/benchmark/", "Base topic")
 	clientNum := flag.Int("c", 20, "Number of clients")
 	count := flag.Int("n", 100, "Number of message to Publish or receive")
 	size := flag.Int("size", 1024, "Message size per publish (byte)")
