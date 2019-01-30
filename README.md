@@ -46,31 +46,31 @@ Mock Info:
 	topic:        mqtt-mock/benchmark/
 	qos:          0
 	debug:        false
-2019/01/25 15:19:22 Throughput=31745.67(messages/sec)
-2019/01/25 15:19:26 Throughput=47587.33(messages/sec)
-2019/01/25 15:19:30 Throughput=45780.33(messages/sec)
-2019/01/25 15:19:34 Throughput=50000.67(messages/sec)
-2019/01/25 15:19:38 Throughput=48884.67(messages/sec)
-2019/01/25 15:19:42 Throughput=43342.67(messages/sec)
-2019/01/25 15:19:46 Throughput=56391.00(messages/sec)
-2019/01/25 15:19:46 Finish subscribe mock! Throughput=37037.07(messages/sec)
+2019/01/30 16:17:54 Throughput=27716.00(messages/sec)
+2019/01/30 16:17:58 Throughput=56275.00(messages/sec)
+2019/01/30 16:18:02 Throughput=43389.33(messages/sec)
+2019/01/30 16:18:06 Throughput=51921.67(messages/sec)
+2019/01/30 16:18:10 Throughput=50261.67(messages/sec)
+2019/01/30 16:18:14 Throughput=49524.00(messages/sec)
+2019/01/30 16:18:18 Throughput=49838.00(messages/sec)
+2019/01/30 16:18:18 Finish subscribe mock! total=1000000 cost=28s Throughput=35714.29(messages/sec)
 
 ```
 
 # 模拟 Publish
 ```$xslt
-./mqtt-mock -broker "tcp://127.0.0.1:8000" -c 200 -n 100000 -size 1024 -action pub
+./mqtt-mock -broker "tcp://127.0.0.1:8000" -c 200 -n 500000 -size 1024 -action pub
 Mock Info:
 	broker:       tcp://127.0.0.1:8000
 	c:            200
-	n:            100000
+	n:            500000
 	size:         1024
 	username:     admin
 	password:     123456
 	topic:        mqtt-mock/benchmark/
 	qos:          0
 	debug:        false
-2019/01/25 15:28:22 Finish publish mock! Throughput=23535.86(messages/sec)
+2019/01/30 16:15:59 Finish publish mock! total=500000 cost=26s Throughput=19230.77(messages/sec)
 ```
 
 # 模拟 Connection number
