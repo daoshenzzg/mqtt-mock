@@ -73,7 +73,7 @@ Mock Info:
 2019/01/30 16:15:59 Finish publish mock! total=500000 cost=26s Throughput=19230.77(messages/sec)
 ```
 
-# 模拟 Connection number
+# 模拟 Connection clients
 ```$xslt
 ./mqtt-mock -broker "tcp://127.0.0.1:8000" -c 10000 -n 1 -action sub -debug true
 Mock Info:
