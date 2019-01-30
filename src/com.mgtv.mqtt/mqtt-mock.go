@@ -143,21 +143,21 @@ func DoPublish(clients []MQTT.Client, opts ExecOptions) {
 		go func() {
 			token := client.Publish(opts.Topic, opts.Qos, false, message)
 			token.Wait()
-			totalCount++
 			wg.Done()
 		}()
 
+		totalCount++
 	}
 	wg.Wait()
 	end := time.Now().Unix()
 
 	// 吞吐量计算
 	throughput := float64(totalCount)
-	duration := float64(end - start)
-	if duration > 0 {
-		throughput = float64(totalCount) / duration
+	cost := float64(end - start)
+	if cost > 0 {
+		throughput = float64(totalCount) / cost
 	}
-	log.Printf("Finish publish mock! Throughput=%.2f(messages/sec)\n", throughput)
+	log.Printf("Finish publish mock! total=%d cost=%.0fs Throughput=%.2f(messages/sec)\n", totalCount, cost, throughput)
 
 	// 断开连接
 	for _, client := range clients {
@@ -188,15 +188,18 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 			log.Printf("Received message : topic=%s, message=%s\n", data[0], data[1])
 		}
 
-		// 总吞吐量累计
-		totalCount++
-		if totalCount > opts.Count {
+		// 超过指定消息数跳出循环
+		if totalCount >= opts.Count {
 			break
 		}
+
+		// 总吞吐量累计
+		totalCount++
 
 		// 从接收到的第一条消息开始计算时间
 		if totalCount == 1 {
 			start = time.Now().Unix()
+			t1 = time.Now().Unix()
 		}
 
 		// 每3秒计算一下吞吐量
@@ -217,11 +220,11 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 
 	// 吞吐量计算
 	throughput := float64(totalCount)
-	duration := float64(end - start)
-	if duration > 0 {
-		throughput = float64(totalCount) / duration
+	cost := float64(end - start)
+	if cost > 0 {
+		throughput = float64(totalCount) / cost
 	}
-	log.Printf("Finish subscribe mock! Throughput=%.2f(messages/sec)\n", throughput)
+	log.Printf("Finish subscribe mock! total=%d cost=%.0fs Throughput=%.2f(messages/sec)\n", totalCount, cost, throughput)
 
 	// 断开连接
 	for _, client := range clients {
