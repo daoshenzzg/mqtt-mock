@@ -36,41 +36,46 @@ Usage: ./mqtt-mock [-broker <broker>] [-action <action>] [-topic <topic>] [-c <c
 
 # 模拟 Subscribe
 ```$xslt
-./mqtt-mock -broker "tcp://127.0.0.1:8000" -c 2000 -n 1000000 -action sub
+./mqtt-mock -broker "tcp://127.0.0.1:8000" -c 2000 -n 500000 -action sub
 Mock Info:
 	broker:       tcp://127.0.0.1:8000
 	c:            2000
-	n:            1000000
+	n:            500000
 	username:     admin
 	password:     123456
 	topic:        mqtt-mock/benchmark/
 	qos:          0
 	debug:        false
-2019/01/30 16:17:54 Throughput=27716.00(messages/sec)
-2019/01/30 16:17:58 Throughput=56275.00(messages/sec)
-2019/01/30 16:18:02 Throughput=43389.33(messages/sec)
-2019/01/30 16:18:06 Throughput=51921.67(messages/sec)
-2019/01/30 16:18:10 Throughput=50261.67(messages/sec)
-2019/01/30 16:18:14 Throughput=49524.00(messages/sec)
-2019/01/30 16:18:18 Throughput=49838.00(messages/sec)
-2019/01/30 16:18:18 Finish subscribe mock! total=1000000 cost=28s Throughput=35714.29(messages/sec)
+2019/01/30 16:46:42 Throughput=16357.00(messages/sec)
+2019/01/30 16:46:43 Throughput=39642.00(messages/sec)
+2019/01/30 16:46:44 Throughput=35999.00(messages/sec)
+...
+2019/01/30 16:46:52 Throughput=38009.00(messages/sec)
+2019/01/30 16:46:53 Throughput=36383.00(messages/sec)
+2019/01/30 16:46:54 Throughput=37597.00(messages/sec)
+2019/01/30 16:46:54 Finish subscribe mock! total=500000 cost=13s Throughput=38461.54(messages/sec)
 
 ```
 
 # 模拟 Publish
 ```$xslt
-./mqtt-mock -broker "tcp://127.0.0.1:8000" -c 200 -n 500000 -size 1024 -action pub
+./mqtt-mock -broker "tcp://127.0.0.1:8000" -c 200 -n 500000 -size 64 -action pub
 Mock Info:
 	broker:       tcp://127.0.0.1:8000
 	c:            200
 	n:            500000
-	size:         1024
+	size:         1
 	username:     admin
 	password:     123456
 	topic:        mqtt-mock/benchmark/
 	qos:          0
 	debug:        false
-2019/01/30 16:15:59 Finish publish mock! total=500000 cost=26s Throughput=19230.77(messages/sec)
+2019/01/31 11:10:56 100000 messages has been published.
+2019/01/31 11:10:59 200000 messages has been published.
+2019/01/31 11:11:02 300000 messages has been published.
+2019/01/31 11:11:04 400000 messages has been published.
+2019/01/31 11:11:07 500000 messages has been published.
+2019/01/31 11:11:07 Finish publish mock! total=500000 cost=14s Throughput=35714.29(messages/sec)
 ```
 
 # 模拟 Connection clients
@@ -85,11 +90,11 @@ Mock Info:
 	topic:        mqtt-mock/benchmark/
 	qos:          0
 	debug:        true
-2019/01/28 15:33:06 Connected : clientId= mqttbench-15ea9-0
 2019/01/28 15:33:06 Connected : clientId= mqttbench-15ea9-1
+2019/01/28 15:33:06 Connected : clientId= mqttbench-15ea9-2
 ...
-2019/01/28 15:33:06 Connected : clientId= mqttbench-15ea9-9998
 2019/01/28 15:33:06 Connected : clientId= mqttbench-15ea9-9999
+2019/01/28 15:33:06 Connected : clientId= mqttbench-15ea9-10000
 
 ```
 

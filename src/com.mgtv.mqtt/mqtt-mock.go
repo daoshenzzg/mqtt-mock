@@ -8,13 +8,14 @@ import (
 	"os"
 	"strconv"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 )
 
 var Debug bool = false
-var choke chan [2]string = make(chan [2]string)
+var Choke chan [2]string = make(chan [2]string)
 
 type ExecOptions struct {
 	Broker      string // Broker URI
@@ -52,12 +53,12 @@ func main() {
 	}
 
 	if *broker == "" {
-		fmt.Printf("Invalid argument : -broker -> %s\n", *broker)
+		fmt.Printf("Invalid argument: -broker -> %s\n", *broker)
 		return
 	}
 
 	if *action != "pub" && *action != "sub" {
-		fmt.Printf("Invalid argument : -action -> %s\n", *action)
+		fmt.Printf("Invalid argument: -action -> %s\n", *action)
 		return
 	}
 
@@ -88,7 +89,7 @@ func main() {
 	clients := make([]MQTT.Client, execOpts.ClientNum)
 	for i := 0; i < execOpts.ClientNum; i++ {
 		// Prepare client options
-		clientId := GenClientId(i)
+		clientId := GenClientId(i + 1)
 		opts := MQTT.NewClientOptions()
 		opts.AddBroker(execOpts.Broker)
 		opts.SetClientID(clientId)
@@ -98,11 +99,12 @@ func main() {
 		opts.SetKeepAlive(90 * time.Second)
 		opts.SetAutoReconnect(true)
 		opts.SetDefaultPublishHandler(func(client MQTT.Client, msg MQTT.Message) {
-			choke <- [2]string{msg.Topic(), string(msg.Payload())}
+			Choke <- [2]string{msg.Topic(), string(msg.Payload())}
 		})
 
 		// Build MQTT Client
 		client := MQTT.NewClient(opts)
+
 		// Connect to MQTT Server
 		if token := client.Connect(); token.Wait() && token.Error() != nil {
 			log.Println(token.Error())
@@ -111,7 +113,7 @@ func main() {
 
 		clients[i] = client
 		if Debug {
-			log.Println("Connected : clientId=", clientId)
+			log.Printf("Connected: clientId=%s\n", clientId)
 		}
 	}
 
@@ -125,32 +127,48 @@ func main() {
 
 // 模拟publish
 func DoPublish(clients []MQTT.Client, opts ExecOptions) {
-	start := time.Now().Unix()
 	message := CreateFixedSizeMessage(opts.MessageSize)
+
+	// 控制下并发数
+	ch := make(chan int, opts.ClientNum)
 	wg := new(sync.WaitGroup)
-	totalCount := 0
-	id := 0
-	for totalCount < opts.Count {
+
+	start := time.Now().Unix()
+	var count int64
+
+	for i := 0; i < opts.Count; i++ {
 		wg.Add(1)
 
-		// 遍历完重头来一遍
-		if id >= len(clients)-1 {
-			id = 0
-		}
-		client := clients[id]
+		clientId := i % len(clients)
+		client := clients[clientId]
 
+		ch <- i
 		// 异步执行Publish操作
-		go func() {
-			token := client.Publish(opts.Topic, opts.Qos, false, message)
-			token.Wait()
-			wg.Done()
-		}()
+		go func(chan int) {
+			defer wg.Done()
 
-		totalCount++
+			topic := fmt.Sprintf(opts.Topic+"%d", clientId)
+			token := client.Publish(topic, opts.Qos, false, message)
+			token.Wait()
+
+			if Debug {
+				log.Printf("Published message: topic=%s, message=%s\n", topic, message)
+			}
+
+			if atomic.AddInt64(&count, 1)%100000 == 0 {
+				log.Printf("%d messages has been published.\n", count)
+			}
+
+			<-ch
+		}(ch)
+
 	}
+
 	wg.Wait()
+
 	end := time.Now().Unix()
 
+	totalCount := opts.Count
 	// 吞吐量计算
 	throughput := float64(totalCount)
 	cost := float64(end - start)
@@ -183,9 +201,9 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 	t1 := time.Now().Unix()
 	count := 0
 	for {
-		data := <-choke
+		data := <-Choke
 		if Debug {
-			log.Printf("Received message : topic=%s, message=%s\n", data[0], data[1])
+			log.Printf("Received message(%d): topic=%s, message=%s\n", count, data[0], data[1])
 		}
 
 		// 超过指定消息数跳出循环
@@ -202,13 +220,13 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 			t1 = time.Now().Unix()
 		}
 
-		// 每3秒计算一下吞吐量
+		// TPS计算
 		var duration int64 = 3
 		t2 := time.Now().Unix()
 		if t2-t1 <= duration {
 			count++
 		} else {
-			throughput := float64(count) / float64(duration)
+			throughput := float64(count) / float64(t2-t1)
 			log.Printf("Throughput=%.2f(messages/sec)\n", throughput)
 			// 重置
 			t1 = t2
