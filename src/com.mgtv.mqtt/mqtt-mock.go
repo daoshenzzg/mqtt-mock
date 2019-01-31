@@ -211,7 +211,7 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 			t1 = time.Now().Unix()
 		}
 
-		var duration int64 = 3
+		var duration int64 = 1
 		t2 := time.Now().Unix()
 		if t2-t1 <= duration {
 			count++
@@ -248,7 +248,7 @@ func Disconnect(client MQTT.Client) {
 // mqtbench<进程ID的16进制数值>-<客户端的编号>
 func GenClientId(id int) string {
 	pid := strconv.FormatInt(int64(os.Getpid()), 16)
-	clientId := fmt.Sprintf("mqttbench-%s-%d", pid, id)
+	clientId := fmt.Sprintf("mqttmock-%s-%d", pid, id)
 	return clientId
 }
 

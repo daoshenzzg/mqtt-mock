@@ -90,11 +90,11 @@ Mock Info:
 	topic:        mqtt-mock/benchmark/
 	qos:          0
 	debug:        true
-2019/01/28 15:33:06 Connected : clientId= mqttbench-15ea9-1
-2019/01/28 15:33:06 Connected : clientId= mqttbench-15ea9-2
+2019/01/28 15:33:06 Connected : clientId= mqttmock-15ea9-1
+2019/01/28 15:33:06 Connected : clientId= mqttmock-15ea9-2
 ...
-2019/01/28 15:33:06 Connected : clientId= mqttbench-15ea9-9999
-2019/01/28 15:33:06 Connected : clientId= mqttbench-15ea9-10000
+2019/01/28 15:33:06 Connected : clientId= mqttmock-15ea9-9999
+2019/01/28 15:33:06 Connected : clientId= mqttmock-15ea9-10000
 
 ```
 
