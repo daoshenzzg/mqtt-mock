@@ -125,7 +125,6 @@ func main() {
 	}
 }
 
-// 模拟publish
 func DoPublish(clients []MQTT.Client, opts ExecOptions) {
 	message := CreateFixedSizeMessage(opts.MessageSize)
 
@@ -143,7 +142,6 @@ func DoPublish(clients []MQTT.Client, opts ExecOptions) {
 		client := clients[clientId]
 
 		ch <- i
-		// 异步执行Publish操作
 		go func(chan int) {
 			defer wg.Done()
 
@@ -169,7 +167,6 @@ func DoPublish(clients []MQTT.Client, opts ExecOptions) {
 	end := time.Now().Unix()
 
 	totalCount := opts.Count
-	// 吞吐量计算
 	throughput := float64(totalCount)
 	cost := float64(end - start)
 	if cost > 0 {
@@ -177,13 +174,11 @@ func DoPublish(clients []MQTT.Client, opts ExecOptions) {
 	}
 	log.Printf("Finish publish mock! total=%d cost=%.0fs Throughput=%.2f(messages/sec)\n", totalCount, cost, throughput)
 
-	// 断开连接
 	for _, client := range clients {
 		Disconnect(client)
 	}
 }
 
-// 模拟subscribe
 func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 	for id := 0; id < len(clients); id++ {
 		client := clients[id]
@@ -197,7 +192,6 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 
 	totalCount := 0
 	start := time.Now().Unix()
-	// 吞吐量计算
 	t1 := time.Now().Unix()
 	count := 0
 	for {
@@ -206,13 +200,10 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 			log.Printf("Received message(%d): topic=%s, message=%s\n", count, data[0], data[1])
 		}
 
-		// 超过指定消息数跳出循环
+		totalCount++
 		if totalCount >= opts.Count {
 			break
 		}
-
-		// 总吞吐量累计
-		totalCount++
 
 		// 从接收到的第一条消息开始计算时间
 		if totalCount == 1 {
@@ -220,7 +211,6 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 			t1 = time.Now().Unix()
 		}
 
-		// TPS计算
 		var duration int64 = 3
 		t2 := time.Now().Unix()
 		if t2-t1 <= duration {
@@ -228,7 +218,8 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 		} else {
 			throughput := float64(count) / float64(t2-t1)
 			log.Printf("Throughput=%.2f(messages/sec)\n", throughput)
-			// 重置
+
+			// reset
 			t1 = t2
 			count = 0
 		}
@@ -236,7 +227,6 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 	}
 	end := time.Now().Unix()
 
-	// 吞吐量计算
 	throughput := float64(totalCount)
 	cost := float64(end - start)
 	if cost > 0 {
@@ -244,13 +234,11 @@ func DoSubscribe(clients []MQTT.Client, opts ExecOptions) {
 	}
 	log.Printf("Finish subscribe mock! total=%d cost=%.0fs Throughput=%.2f(messages/sec)\n", totalCount, cost, throughput)
 
-	// 断开连接
 	for _, client := range clients {
 		Disconnect(client)
 	}
 }
 
-// 切断与Broker的连接
 func Disconnect(client MQTT.Client) {
 	client.Disconnect(10)
 }
