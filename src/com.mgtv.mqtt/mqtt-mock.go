@@ -248,7 +248,7 @@ func Disconnect(client MQTT.Client) {
 // mqtbench<进程ID的16进制数值>-<客户端的编号>
 func GenClientId(id int) string {
 	pid := strconv.FormatInt(int64(os.Getpid()), 16)
-	clientId := fmt.Sprintf("mqttmock-%s-%d", pid, id)
+	clientId := fmt.Sprintf("mqttmockin-%s-%d", pid, id)
 	return clientId
 }
 
