@@ -99,7 +99,7 @@ Mock Info:
 ```
 
 # 压测Server
-* https://github.com/daoshenzzg/socket-coremqtt-mock.gomqtt-mock.gomqtt-mock.gomqtt-mock.go
+* https://github.com/daoshenzzg/socket-mqtt
 
 # 参考项目
 * https://github.com/mrkt/Ali_LMQ_SDK
