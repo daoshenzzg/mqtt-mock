@@ -6,7 +6,7 @@
 Use go get and go build
 ```$xslt
 go get github.com/daoshenzzg/mqtt-mock
-cd ../mqtt-mock/src/com.mgtv.mqtt; go build mqtt-mock.go
+cd ../mqtt-mock/src; go build mqtt-mock.go
 
 ```
 # 使用说明
@@ -99,7 +99,7 @@ Mock Info:
 ```
 
 # 压测Server
-* https://github.com/daoshenzzg/socket-core
+* https://github.com/daoshenzzg/socket-coremqtt-mock.gomqtt-mock.gomqtt-mock.gomqtt-mock.go
 
 # 参考项目
 * https://github.com/mrkt/Ali_LMQ_SDK
