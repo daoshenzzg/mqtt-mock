@@ -1,3 +1,5 @@
+<a href="https://996.icu"><img src="https://img.shields.io/badge/link-996.icu-red.svg"></a>
+
 # MQTT-Mock: MQTT Benchmark Tool
 这是一个使用[golang](https://golang.org)实现的mqtt客户端压测工具. 目前可支持Publish、Subscribe以及模拟指定数量客户端连接。
 用于压测socket单broker能支撑多少连接数、下行消息、上行消息推送能力。
